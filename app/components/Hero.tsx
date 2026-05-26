@@ -9,51 +9,81 @@ export default function Hero() {
   const totalFrames = 40;
 
   useEffect(() => {
+    let rafId = null;
+    let lastFrame = 1;
+    
     const handleScroll = () => {
-      const section = sectionRef.current;
-      if (!section) return;
+      if (rafId) return;
+      
+      rafId = requestAnimationFrame(() => {
+        const section = sectionRef.current;
+        if (!section) return;
 
-      const rect = section.getBoundingClientRect();
-      const sectionHeight = section.offsetHeight - window.innerHeight;
-      const scrolled = -rect.top;
-      const progress = Math.min(1, Math.max(0, scrolled / sectionHeight));
-
-      const frameNumber = Math.round(firstFrame + progress * (totalFrames - firstFrame));
-      setFrame(frameNumber);
+        const rect = section.getBoundingClientRect();
+        const scrolled = -rect.top;
+        
+        // Super fast - completes in 40% of scroll
+        const scrollDistance = window.innerHeight * 0.4;
+        let progress = Math.min(1, Math.max(0, scrolled / scrollDistance));
+        
+        // Instant linear response
+        const eased = progress;
+        
+        let frameNumber = Math.round(firstFrame + eased * (totalFrames - firstFrame));
+        frameNumber = Math.min(totalFrames, Math.max(firstFrame, frameNumber));
+        
+        if (frameNumber !== lastFrame) {
+          setFrame(frameNumber);
+          lastFrame = frameNumber;
+        }
+        
+        rafId = null;
+      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const padded = String(frame).padStart(3, "0");
 
   return (
-    <section ref={sectionRef} id="home" className="relative h-[500vh] sm:h-[600vh] w-full">
+    <section ref={sectionRef} id="home" className="relative h-[100vh] w-full">
 
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
 
-        {/* Background image */}
+        {/* Background image - Ultra Premium quality */}
         <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black" />
           <img
             src={`/images/webp/ezgif-frame-${padded}.png`}
             alt="Product"
-            className="w-full h-full object-cover opacity-90"
-            style={{ objectPosition: "center center" }}
+            className="w-full h-full object-cover will-change-transform"
+            style={{ 
+              objectPosition: "center center",
+              filter: "brightness(1.25) contrast(1.12) saturate(1.2) drop-shadow(0 0 2px rgba(0,0,0,0.3))",
+              imageRendering: "crisp-edges",
+              transform: `scale(${1 + (frame / totalFrames) * 0.04})`,
+              transition: "none",
+              WebkitBackfaceVisibility: "hidden",
+              backfaceVisibility: "hidden"
+            }}
           />
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-black/80 z-0" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70 z-0" />
 
-        {/* TOP: Badge + Heading + Subtext */}
+        {/* TOP: Badge + Heading + Subtext - EXACT original layout */}
         <div
           className="absolute left-0 right-0 z-10 flex flex-col items-center text-center px-4 gap-1.5"
           style={{ top: "88px" }}
         >
-          {/* Badge */}
+          {/* Badge - EXACT original */}
           <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1">
             <span className="w-1 h-1 rounded-full bg-yellow-400 animate-pulse" />
             <span className="text-yellow-400/90 text-[9px] tracking-[0.25em] uppercase font-light">
@@ -61,7 +91,7 @@ export default function Hero() {
             </span>
           </div>
 
-          {/* Heading */}
+          {/* Heading - EXACT original */}
           <h1 className="text-6xl sm:text-8xl font-light text-white leading-[1.05] tracking-tighter">
             Whitening
             <br />
@@ -72,14 +102,14 @@ export default function Hero() {
 
           <div className="w-10 h-px bg-gradient-to-r from-yellow-400 to-transparent mx-auto" />
 
-          {/* Subtext */}
+          {/* Subtext - EXACT original */}
           <p className="text-white/70 text-[11px] max-w-[200px] leading-snug font-light">
             Advanced formula for radiant, even-toned skin.{" "}
             <span className="text-yellow-400/90">Visible results in just 7 days.</span>
           </p>
         </div>
 
-        {/* BOTTOM: Buttons + Scroll — pinned to bottom */}
+        {/* BOTTOM: Buttons + Scroll - EXACT original layout and position */}
         <div
           className="absolute left-0 right-0 z-10 flex flex-col items-center gap-2 px-4"
           style={{ bottom: "1px" }}
