@@ -3,87 +3,77 @@
 import { useEffect, useRef, useState } from "react";
 
 export default function Hero() {
-  const [frame, setFrame] = useState(1);
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const firstFrame = 1;
-  const totalFrames = 40;
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
-    let rafId: number | null = null;
-    let lastFrame = 1;
-    
-    const handleScroll = () => {
-      if (rafId !== null) return;
-      
-      rafId = requestAnimationFrame(() => {
-        const section = sectionRef.current;
-        if (!section) return;
+    const video = videoRef.current;
+    if (!video) return;
 
-        const rect = section.getBoundingClientRect();
-        const scrolled = -rect.top;
-        
-        // Super fast - completes in 40% of scroll
-        const scrollDistance = window.innerHeight * 0.4;
-        let progress = Math.min(1, Math.max(0, scrolled / scrollDistance));
-        
-        // Instant linear response
-        const eased = progress;
-        
-        let frameNumber = Math.round(firstFrame + eased * (totalFrames - firstFrame));
-        frameNumber = Math.min(totalFrames, Math.max(firstFrame, frameNumber));
-        
-        if (frameNumber !== lastFrame) {
-          setFrame(frameNumber);
-          lastFrame = frameNumber;
-        }
-        
-        rafId = null;
+    // Try to play video
+    const playVideo = () => {
+      video.play().catch(err => {
+        console.error("Video play failed:", err);
+        setError(true);
       });
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
+    // Wait for video to be ready
+    video.addEventListener('canplay', playVideo);
+    
+    // Try immediately if already loaded
+    if (video.readyState >= 2) {
+      playVideo();
+    }
+
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-      if (rafId !== null) cancelAnimationFrame(rafId);
+      video.removeEventListener('canplay', playVideo);
     };
   }, []);
 
-  const padded = String(frame).padStart(3, "0");
-
   return (
-    <section ref={sectionRef} id="home" className="relative h-[100vh] w-full">
-
+    <section id="home" className="relative h-[100vh] w-full">
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
-
-        {/* Background image - Ultra Premium quality */}
+        
+        {/* Video Background */}
         <div className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black" />
-          <img
-            src={`/images/webp/ezgif-frame-${padded}.png`}
-            alt="Product"
-            className="w-full h-full object-cover will-change-transform"
+          
+          {/* Show error message if video fails */}
+          {error && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
+              <div className="text-white/50 text-center">
+                <p className="text-yellow-400">⚠️ Video not found</p>
+                <p className="text-xs mt-2">Check: /public/images/video.mp4</p>
+              </div>
+            </div>
+          )}
+          
+          <video
+            ref={videoRef}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
             style={{ 
               objectPosition: "center center",
-              filter: "brightness(1.25) contrast(1.12) saturate(1.2) drop-shadow(0 0 2px rgba(0,0,0,0.3))",
-              imageRendering: "crisp-edges",
-              transform: `scale(${1 + (frame / totalFrames) * 0.04})`,
-              transition: "none",
-              WebkitBackfaceVisibility: "hidden",
-              backfaceVisibility: "hidden"
+              filter: "brightness(1.05) contrast(1.08) saturate(1.15)",
             }}
-          />
+            onError={() => setError(true)}
+          >
+            <source src="/images/video.mp4" type="video/mp4" />
+          </video>
+          
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70 z-0" />
 
-        {/* TOP: Badge + Heading + Subtext - EXACT original layout */}
+        {/* TOP: Badge + Heading + Subtext */}
         <div
           className="absolute left-0 right-0 z-10 flex flex-col items-center text-center px-4 gap-1.5"
           style={{ top: "88px" }}
         >
-          {/* Badge - EXACT original */}
           <div className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1">
             <span className="w-1 h-1 rounded-full bg-yellow-400 animate-pulse" />
             <span className="text-yellow-400/90 text-[9px] tracking-[0.25em] uppercase font-light">
@@ -91,8 +81,7 @@ export default function Hero() {
             </span>
           </div>
 
-          {/* Heading - EXACT original */}
-          <h1 className="text-6xl sm:text-8xl font-light text-white leading-[1.05] tracking-tighter">
+          <h1 className="text-6xl sm:text-8xl font-light text-white leading-[1.05] tracking-tighter drop-shadow-2xl">
             Whitening
             <br />
             <span className="font-bold bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent">
@@ -102,14 +91,13 @@ export default function Hero() {
 
           <div className="w-10 h-px bg-gradient-to-r from-yellow-400 to-transparent mx-auto" />
 
-          {/* Subtext - EXACT original */}
-          <p className="text-white/70 text-[11px] max-w-[200px] leading-snug font-light">
+          <p className="text-white/80 text-[11px] max-w-[200px] leading-snug font-light drop-shadow-md">
             Advanced formula for radiant, even-toned skin.{" "}
             <span className="text-yellow-400/90">Visible results in just 7 days.</span>
           </p>
         </div>
 
-        {/* BOTTOM: Buttons + Scroll - EXACT original layout and position */}
+        {/* BOTTOM: Buttons + Scroll */}
         <div
           className="absolute left-0 right-0 z-10 flex flex-col items-center gap-2 px-4"
           style={{ bottom: "1px" }}

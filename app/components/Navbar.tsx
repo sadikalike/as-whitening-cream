@@ -7,6 +7,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -79,109 +80,174 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ${
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${
         scrolled 
-          ? 'bg-black/95 backdrop-blur-xl border-b border-gold-400/20 shadow-2xl' 
-          : 'bg-transparent'
+          ? 'bg-black/90 backdrop-blur-2xl border-b border-yellow-400/20 shadow-2xl shadow-black/50' 
+          : 'bg-gradient-to-b from-black/60 via-black/30 to-transparent backdrop-blur-sm'
       }`}>
+        
+        {/* Animated gradient background on scroll */}
+        <motion.div 
+          className="absolute inset-0 opacity-0 pointer-events-none"
+          animate={{ opacity: scrolled ? 1 : 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/5 via-transparent to-yellow-400/5" />
+        </motion.div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             
-            {/* Logo */}
+            {/* Premium Logo */}
             <motion.button 
-              initial={{ opacity: 0, x: -20 }}
+              initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              whileHover={{ scale: 1.02 }}
               onClick={() => scrollToSection('home')} 
               className="group relative cursor-pointer z-50"
             >
               <div className="relative">
                 <span className="text-white text-xl md:text-2xl font-light tracking-[0.3em]">
-                  AS
-                  <span className="font-bold bg-gradient-to-r from-gold-400 to-gold-300 bg-clip-text text-transparent">
-                    WHITENING
+                  <span className="font-bold bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 bg-clip-text text-transparent">
+                    AS
                   </span>
+                  <span className="text-white/70"> WHITENING</span>
                 </span>
-                <div className="absolute -bottom-1 left-0 w-0 h-px bg-gold-400/50 group-hover:w-full transition-all duration-300" />
+                
+                {/* Premium underline animation */}
+                <motion.div 
+                  className="absolute -bottom-1 left-0 h-px bg-gradient-to-r from-yellow-400 via-yellow-500 to-transparent"
+                  initial={{ width: "0%" }}
+                  whileHover={{ width: "100%" }}
+                  transition={{ duration: 0.4 }}
+                />
+                
+                {/* Glow effect */}
+                <div className="absolute -inset-2 bg-yellow-400/0 blur-xl group-hover:bg-yellow-400/5 transition-all duration-500 rounded-full -z-10" />
               </div>
             </motion.button>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-2">
+            {/* Desktop Navigation - Without Icons */}
+            <div className="hidden md:flex items-center gap-1">
               {navItems.map((item, i) => (
                 <motion.button
                   key={item.id}
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  transition={{ duration: 0.5, delay: i * 0.1, ease: "easeOut" }}
                   onClick={() => scrollToSection(item.id)}
-                  className={`relative px-5 py-2 text-sm tracking-wide transition-all duration-300 rounded-full ${
+                  onMouseEnter={() => setHoveredItem(item.id)}
+                  onMouseLeave={() => setHoveredItem(null)}
+                  className={`relative px-6 py-2.5 text-sm font-medium tracking-wide transition-all duration-300 rounded-full ${
                     activeSection === item.id
-                      ? 'text-gold-400'
-                      : 'text-white/60 hover:text-white'
+                      ? 'text-yellow-400'
+                      : 'text-white/70 hover:text-white'
                   }`}
                 >
-                  {item.label}
+                  {/* Premium background effect */}
+                  <motion.div 
+                    className={`absolute inset-0 rounded-full transition-all duration-300 ${
+                      activeSection === item.id 
+                        ? 'bg-yellow-400/10' 
+                        : hoveredItem === item.id 
+                          ? 'bg-white/5' 
+                          : ''
+                    }`}
+                    initial={false}
+                    animate={{ scale: activeSection === item.id ? 1 : 0.9 }}
+                  />
+                  
+                  <span className="relative z-10">
+                    {item.label}
+                  </span>
+                  
+                  {/* Active indicator - Premium dot */}
                   {activeSection === item.id && (
                     <motion.div
                       layoutId="activeNav"
-                      className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gold-400"
-                      transition={{ duration: 0.3 }}
+                      className="absolute -bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-yellow-400 shadow-lg shadow-yellow-400/50"
+                      transition={{ duration: 0.3, type: "spring", stiffness: 500 }}
                     />
                   )}
-                  <div className={`absolute inset-0 rounded-full opacity-0 transition-opacity duration-300 ${
-                    activeSection === item.id ? 'bg-gold-400/5' : 'hover:bg-white/5'
-                  }`} />
+                  
+                  {/* Hover line effect */}
+                  <motion.div 
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-yellow-400/0 via-yellow-400 to-yellow-400/0"
+                    initial={{ width: "0%" }}
+                    animate={{ width: hoveredItem === item.id ? "60%" : "0%" }}
+                    transition={{ duration: 0.3 }}
+                  />
                 </motion.button>
               ))}
             </div>
 
-            {/* Shop Button - Desktop */}
+            {/* Premium Shop Button - Desktop */}
             <motion.button
-              initial={{ opacity: 0, x: 20 }}
+              initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => scrollToSection('cream')}
-              className="hidden md:flex items-center gap-2 bg-gold-400 text-black px-6 py-2.5 rounded-full text-sm font-bold tracking-wide hover:bg-gold-500 hover:shadow-lg hover:shadow-gold-500/50 transition-all duration-300"
+              className="hidden md:flex items-center gap-2 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 text-black px-8 py-2.5 rounded-full text-sm font-bold tracking-wide hover:shadow-2xl hover:shadow-yellow-500/50 transition-all duration-300 relative overflow-hidden group"
             >
-              <span>SHOP NOW</span>
-              <span className="text-lg transition-transform group-hover:translate-x-1">→</span>
+              {/* Shine effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+              
+              <span className="relative z-10">SHOP NOW</span>
+              <motion.span 
+                className="relative z-10 text-lg"
+                animate={{ x: [0, 5, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+              >
+                →
+              </motion.span>
             </motion.button>
 
-            {/* Mobile Menu Button */}
+            {/* Premium Mobile Menu Button */}
             <motion.button 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setIsOpen(!isOpen)} 
-              className="md:hidden relative w-8 h-8 focus:outline-none z-50"
+              className="md:hidden relative w-10 h-10 focus:outline-none z-50 rounded-full bg-white/5 backdrop-blur-sm border border-white/10"
             >
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6">
-                <span className={`block h-0.5 bg-white transition-all duration-300 ${
-                  isOpen ? 'rotate-45 translate-y-1.5' : ''
-                }`} />
-                <span className={`block h-0.5 bg-white transition-all duration-300 my-1.5 ${
-                  isOpen ? 'opacity-0' : ''
-                }`} />
-                <span className={`block h-0.5 bg-white transition-all duration-300 ${
-                  isOpen ? '-rotate-45 -translate-y-1.5' : ''
-                }`} />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5">
+                <motion.span 
+                  animate={{ rotate: isOpen ? 45 : 0, y: isOpen ? 6 : 0 }}
+                  className={`block h-0.5 bg-gradient-to-r from-yellow-400 to-white transition-all duration-300`}
+                />
+                <motion.span 
+                  animate={{ opacity: isOpen ? 0 : 1 }}
+                  className={`block h-0.5 bg-gradient-to-r from-yellow-400 to-white transition-all duration-300 my-1.5`}
+                />
+                <motion.span 
+                  animate={{ rotate: isOpen ? -45 : 0, y: isOpen ? -6 : 0 }}
+                  className={`block h-0.5 bg-gradient-to-r from-yellow-400 to-white transition-all duration-300`}
+                />
               </div>
             </motion.button>
           </div>
         </div>
 
-        {/* Progress Bar on Scroll - FIXED: using state instead of direct window access */}
+        {/* Premium Progress Bar */}
         <motion.div 
-          className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-gold-400 to-gold-600"
-          style={{
-            width: `${scrollProgress}%`
-          }}
+          className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400"
+          style={{ width: `${scrollProgress}%` }}
+          initial={false}
+          animate={{ width: `${scrollProgress}%` }}
+          transition={{ duration: 0.1 }}
+        />
+        
+        {/* Progress bar glow effect */}
+        <div 
+          className="absolute bottom-0 left-0 h-[2px] bg-yellow-400/30 blur-sm"
+          style={{ width: `${scrollProgress}%` }}
         />
       </nav>
 
-      {/* Mobile Menu Overlay */}
+      {/* Premium Mobile Menu Overlay */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -191,44 +257,58 @@ export default function Navbar() {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/95 backdrop-blur-md z-40 md:hidden"
+              className="fixed inset-0 bg-black/95 backdrop-blur-xl z-40 md:hidden"
             />
             
             <motion.div
-              initial={{ opacity: 0, y: -20 }}
+              initial={{ opacity: 0, y: -30 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="fixed top-20 left-0 right-0 z-40 md:hidden"
+              exit={{ opacity: 0, y: -30 }}
+              transition={{ duration: 0.4, type: "spring", stiffness: 300 }}
+              className="fixed top-20 left-0 right-0 z-40 md:hidden px-4"
             >
-              <div className="mx-4 p-6 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/10 shadow-2xl">
-                <div className="space-y-2">
+              <div className="p-6 rounded-2xl bg-gradient-to-br from-white/10 via-white/5 to-transparent backdrop-blur-2xl border border-white/20 shadow-2xl">
+                <div className="space-y-3">
                   {navItems.map((item, i) => (
                     <motion.button
                       key={item.id}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -30 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05 }}
+                      exit={{ opacity: 0, x: -30 }}
+                      transition={{ delay: i * 0.05, type: "spring", stiffness: 400 }}
+                      whileHover={{ scale: 1.02, x: 10 }}
                       onClick={() => scrollToSection(item.id)}
-                      className={`block w-full text-left px-5 py-4 rounded-xl transition-all duration-300 ${
+                      className={`block w-full text-left px-6 py-4 rounded-xl transition-all duration-300 ${
                         activeSection === item.id
-                          ? 'bg-gold-400/10 text-gold-400 border border-gold-400/30'
-                          : 'text-white/80 hover:bg-white/10 hover:text-white'
+                          ? 'bg-gradient-to-r from-yellow-400/20 to-yellow-500/10 text-yellow-400 border border-yellow-400/30 shadow-lg shadow-yellow-400/20'
+                          : 'text-white/80 hover:bg-white/10 hover:text-white hover:translate-x-2'
                       }`}
                     >
-                      <span className="text-base font-medium tracking-wide">{item.label}</span>
+                      <div className="flex items-center justify-between">
+                        <span className="text-base font-medium tracking-wide">{item.label}</span>
+                        {activeSection === item.id && (
+                          <motion.div 
+                            className="w-1.5 h-1.5 rounded-full bg-yellow-400"
+                            animate={{ scale: [1, 1.5, 1] }}
+                            transition={{ repeat: Infinity, duration: 1.5 }}
+                          />
+                        )}
+                      </div>
                     </motion.button>
                   ))}
                   
-                  {/* Mobile Shop Button */}
+                  {/* Premium Mobile Shop Button */}
                   <motion.button
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.2 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ delay: 0.2, type: "spring" }}
+                    whileHover={{ scale: 1.02 }}
                     onClick={() => scrollToSection('cream')}
-                    className="w-full mt-4 bg-gold-400 text-black px-5 py-4 rounded-xl text-base font-bold tracking-wide hover:bg-gold-500 transition-all duration-300"
+                    className="w-full mt-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 py-4 rounded-xl text-base font-bold tracking-wide hover:shadow-2xl hover:shadow-yellow-500/50 transition-all duration-300 relative overflow-hidden group"
                   >
-                    SHOP NOW →
+                    <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                    <span className="relative z-10">SHOP NOW →</span>
                   </motion.button>
                 </div>
               </div>
@@ -236,6 +316,15 @@ export default function Navbar() {
           </>
         )}
       </AnimatePresence>
+
+      {/* Subtle floating particles effect when scrolled */}
+      {scrolled && (
+        <div className="fixed top-20 left-0 right-0 pointer-events-none z-40">
+          <div className="absolute top-0 left-1/4 w-1 h-1 bg-yellow-400/30 rounded-full animate-ping" />
+          <div className="absolute top-2 right-1/3 w-0.5 h-0.5 bg-yellow-400/20 rounded-full animate-pulse" />
+          <div className="absolute top-4 left-1/3 w-0.5 h-0.5 bg-yellow-400/25 rounded-full animate-pulse delay-500" />
+        </div>
+      )}
     </>
   );
 }
