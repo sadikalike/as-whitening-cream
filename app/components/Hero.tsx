@@ -9,11 +9,11 @@ export default function Hero() {
   const totalFrames = 40;
 
   useEffect(() => {
-    let rafId = null;
+    let rafId: number | null = null;
     let lastFrame = 1;
     
     const handleScroll = () => {
-      if (rafId) return;
+      if (rafId !== null) return;
       
       rafId = requestAnimationFrame(() => {
         const section = sectionRef.current;
@@ -45,7 +45,7 @@ export default function Hero() {
     handleScroll();
     return () => {
       window.removeEventListener("scroll", handleScroll);
-      if (rafId) cancelAnimationFrame(rafId);
+      if (rafId !== null) cancelAnimationFrame(rafId);
     };
   }, []);
 
