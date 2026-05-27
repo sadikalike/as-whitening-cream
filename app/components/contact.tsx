@@ -8,10 +8,12 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showThankYou, setShowThankYou] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [mounted, setMounted] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: false, amount: 0.1 });
 
   useEffect(() => {
+    setMounted(true);
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
@@ -98,17 +100,62 @@ export default function Contact() {
     <section
       ref={ref}
       id="contact"
-      className="relative py-20 md:py-28 px-5 md:px-12 overflow-hidden scroll-mt-20"
+      className="relative py-20 md:py-28 px-5 md:px-12 bg-black overflow-hidden scroll-mt-20"
     >
-      <div className="absolute inset-0 bg-gradient-to-br from-black via-gray-950 to-black" />
+      {/* ========== PREMIUM CREAM-INSPIRED BACKGROUND ========== */}
       
+      {/* Main Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-black via-black to-amber-950/15" />
+      
+      {/* Soft Animated Glows */}
+      <motion.div 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-amber-400/5 blur-3xl"
+        animate={{
+          scale: [1, 1.1, 1],
+          opacity: [0.3, 0.5, 0.3],
+        }}
+        transition={{
+          duration: 6,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      
+      <motion.div 
+        className="absolute top-20 right-20 w-64 h-64 rounded-full bg-amber-400/3 blur-3xl"
+        animate={{
+          y: [0, -20, 0],
+          x: [0, 15, 0],
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+      
+      <motion.div 
+        className="absolute bottom-20 left-20 w-72 h-72 rounded-full bg-amber-400/3 blur-3xl"
+        animate={{
+          y: [0, 20, 0],
+          x: [0, -15, 0],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: 1,
+        }}
+      />
+
+      {/* Mouse Follow Orbs */}
       <motion.div
         animate={{
           x: mousePosition.x * 0.02,
           y: mousePosition.y * 0.02,
         }}
         transition={{ type: "spring", damping: 30 }}
-        className="absolute top-20 right-10 w-64 h-64 rounded-full bg-yellow-400/5 blur-3xl"
+        className="absolute top-40 right-20 w-80 h-80 rounded-full bg-amber-400/4 blur-3xl pointer-events-none"
       />
       <motion.div
         animate={{
@@ -116,40 +163,76 @@ export default function Contact() {
           y: mousePosition.y * -0.02,
         }}
         transition={{ type: "spring", damping: 30 }}
-        className="absolute bottom-20 left-10 w-80 h-80 rounded-full bg-yellow-400/3 blur-3xl"
+        className="absolute bottom-40 left-20 w-96 h-96 rounded-full bg-amber-400/3 blur-3xl pointer-events-none"
       />
+
+      {/* Subtle Grid Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.012)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.012)_1px,transparent_1px)] bg-[size:60px_60px]" />
       
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,215,0,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,215,0,0.02)_1px,transparent_1px)] bg-[size:50px_50px]" />
+      {/* Gentle Floating Particles */}
+      {mounted && (
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {[...Array(15)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute rounded-full bg-gradient-to-r from-amber-400/15 to-amber-400/5"
+              style={{
+                width: `${2 + (i % 3)}px`,
+                height: `${2 + (i % 3)}px`,
+                left: `${(i * 19) % 100}%`,
+                top: `${(i * 13) % 100}%`,
+              }}
+              animate={{
+                y: [0, -40, -80],
+                opacity: [0, 0.3, 0],
+              }}
+              transition={{
+                duration: 6 + (i % 4),
+                repeat: Infinity,
+                delay: i * 0.3,
+                ease: "easeInOut",
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+      {/* Premium Border Accents */}
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/20 to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/20 to-transparent" />
 
       <div className="relative z-10 max-w-6xl mx-auto">
 
+        {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
           className="text-center mb-12 md:mb-16"
         >
           <motion.div 
             initial={{ scale: 0 }}
             animate={isInView ? { scale: 1 } : {}}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.5, delay: 0.1, type: "spring" }}
             className="inline-flex items-center gap-2 md:gap-3 mb-5 md:mb-6"
           >
-            <div className="w-8 md:w-12 h-px bg-gradient-to-r from-transparent via-yellow-400/60 to-yellow-400/60" />
-            <span className="text-yellow-400/80 text-[10px] md:text-[11px] tracking-[0.3em] uppercase font-semibold">
-              Get In Touch
+            <div className="w-8 md:w-10 h-px bg-gradient-to-r from-transparent to-amber-400/60" />
+            <span className="text-amber-400/80 text-[9px] md:text-[10px] tracking-[0.3em] uppercase font-bold"
+                  style={{ fontFamily: "'Inter', sans-serif" }}>
+              ✨ Get In Touch ✨
             </span>
-            <div className="w-8 md:w-12 h-px bg-gradient-to-l from-transparent via-yellow-400/60 to-yellow-400/60" />
+            <div className="w-8 md:w-10 h-px bg-gradient-to-l from-transparent to-amber-400/60" />
           </motion.div>
           
           <motion.h2 
             initial={{ opacity: 0, y: 20 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.1 }}
-            className="text-3xl sm:text-4xl md:text-5xl font-light text-white mb-3 md:mb-4"
+            transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white leading-[1.2] tracking-tighter mb-4"
+            style={{ fontFamily: "'Playfair Display', 'Space Grotesk', serif" }}
           >
             Let's Talk{" "}
-            <span className="font-bold bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent">
+            <span className="font-bold bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 bg-clip-text text-transparent">
               Skincare
             </span>
           </motion.h2>
@@ -157,30 +240,34 @@ export default function Contact() {
           <motion.div 
             initial={{ width: 0 }}
             animate={isInView ? { width: "80px" } : {}}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="h-px bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent mx-auto my-5 md:my-6"
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+            className="h-px bg-gradient-to-r from-amber-400 via-amber-400/50 to-transparent mx-auto my-5 md:my-6"
           />
           
           <motion.p 
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
             className="text-white/50 text-sm md:text-base max-w-md mx-auto leading-relaxed px-3"
+            style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300 }}
           >
             Have questions about our products? We're here to help you achieve perfect skin.
           </motion.p>
         </motion.div>
 
+        {/* Contact Grid */}
         <div className="grid md:grid-cols-2 gap-8 md:gap-12 items-start">
           
+          {/* Left Side - Contact Info */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
             className="space-y-4 md:space-y-5"
           >
-            <h3 className="text-white text-lg md:text-xl font-medium mb-4 md:mb-6 flex items-center gap-2">
-              <span className="w-6 h-px bg-yellow-400/50" />
+            <h3 className="text-white text-lg md:text-xl font-semibold mb-4 md:mb-6 flex items-center gap-2"
+                style={{ fontFamily: "'Inter', sans-serif" }}>
+              <div className="w-8 h-px bg-gradient-to-r from-amber-400 to-transparent" />
               Contact Information
             </h3>
             
@@ -189,44 +276,51 @@ export default function Contact() {
                 key={i}
                 initial={{ opacity: 0, x: -20 }}
                 animate={isInView ? { opacity: 1, x: 0 } : {}}
-                transition={{ delay: 0.3 + i * 0.1 }}
-                whileHover={{ x: 5, scale: 1.02 }}
-                className={`relative overflow-hidden bg-gradient-to-r ${item.color} to-transparent border border-white/10 rounded-2xl p-5 md:p-6 hover:border-yellow-400/30 transition-all duration-300 group cursor-pointer`}
+                transition={{ delay: 0.4 + i * 0.1, ease: "easeOut" }}
+                whileHover={{ x: 8, scale: 1.02 }}
+                className={`relative overflow-hidden bg-gradient-to-r ${item.color} to-transparent border border-white/10 rounded-2xl p-5 md:p-6 hover:border-amber-400/40 transition-all duration-500 group cursor-pointer`}
               >
-                <div className="absolute top-0 right-0 w-20 h-20 bg-yellow-400/5 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-400/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 
                 <div className="flex items-start gap-3 md:gap-4">
                   <motion.div 
-                    whileHover={{ rotate: 10, scale: 1.1 }}
+                    whileHover={{ rotate: 10, scale: 1.15 }}
                     className="text-2xl md:text-3xl"
                   >
                     {item.icon}
                   </motion.div>
                   <div>
-                    <p className="text-white/40 text-xs md:text-sm mb-1 tracking-wide">{item.title}</p>
+                    <p className="text-white/40 text-xs md:text-sm mb-1 tracking-wide font-medium"
+                       style={{ fontFamily: "'Inter', sans-serif" }}>
+                      {item.title}
+                    </p>
                     {item.link ? (
                       <a 
                         href={item.link}
                         target={item.title === "Instagram" ? "_blank" : "_self"}
                         rel={item.title === "Instagram" ? "noopener noreferrer" : ""}
-                        className="text-white text-sm md:text-base font-medium hover:text-yellow-400 transition-colors break-all"
+                        className="text-white text-sm md:text-base font-medium hover:text-amber-400 transition-colors break-all"
+                        style={{ fontFamily: "'Inter', sans-serif" }}
                       >
                         {item.value}
                       </a>
                     ) : (
-                      <p className="text-white text-sm md:text-base">{item.value}</p>
+                      <p className="text-white text-sm md:text-base"
+                         style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300 }}>
+                        {item.value}
+                      </p>
                     )}
                   </div>
                 </div>
               </motion.div>
             ))}
             
-            {/* Social Icons - WhatsApp, Instagram, Email */}
+            {/* Social Icons */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: 0.6 }}
-              className="flex gap-3 mt-6 md:mt-8"
+              transition={{ delay: 0.7, ease: "easeOut" }}
+              className="flex gap-4 mt-6 md:mt-8"
             >
               {socialLinks.map((social, i) => (
                 <motion.a
@@ -234,32 +328,34 @@ export default function Contact() {
                   href={social.link}
                   target={social.label === "Instagram" ? "_blank" : "_self"}
                   rel={social.label === "Instagram" ? "noopener noreferrer" : ""}
-                  whileHover={{ y: -5, scale: 1.1 }}
+                  whileHover={{ y: -6, scale: 1.1 }}
                   whileTap={{ scale: 0.95 }}
-                  className={`relative overflow-hidden w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br ${social.bg} to-transparent border border-white/20 flex items-center justify-center text-white hover:border-yellow-400/60 hover:text-yellow-400 transition-all duration-300 group`}
+                  className={`relative overflow-hidden w-12 h-12 md:w-14 md:h-14 rounded-full bg-gradient-to-br ${social.bg} to-transparent border border-white/20 flex items-center justify-center text-white hover:border-amber-400/60 hover:text-amber-400 transition-all duration-300 group`}
                   title={social.label}
                 >
-                  <div className="absolute inset-0 bg-yellow-400/0 group-hover:bg-yellow-400/10 transition-all duration-300 rounded-full" />
+                  <div className="absolute inset-0 bg-amber-400/0 group-hover:bg-amber-400/10 transition-all duration-300 rounded-full" />
                   {social.icon}
                 </motion.a>
               ))}
             </motion.div>
           </motion.div>
 
+          {/* Right Side - Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
-            transition={{ duration: 0.5, delay: 0.3 }}
+            transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
           >
             <motion.form
               initial={{ opacity: 0 }}
               animate={isInView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.5 }}
               onSubmit={handleSubmit}
               className="space-y-4 md:space-y-5"
             >
-              <h3 className="text-white text-lg md:text-xl font-medium mb-4 md:mb-6 flex items-center gap-2">
-                <span className="w-6 h-px bg-yellow-400/50" />
+              <h3 className="text-white text-lg md:text-xl font-semibold mb-4 md:mb-6 flex items-center gap-2"
+                  style={{ fontFamily: "'Inter', sans-serif" }}>
+                <div className="w-8 h-px bg-gradient-to-r from-amber-400 to-transparent" />
                 Send us a Message
               </h3>
               
@@ -268,7 +364,7 @@ export default function Contact() {
                   key={field}
                   initial={{ opacity: 0, y: 20 }}
                   animate={isInView ? { opacity: 1, y: 0 } : {}}
-                  transition={{ delay: 0.5 + i * 0.1 }}
+                  transition={{ delay: 0.6 + i * 0.1, ease: "easeOut" }}
                   className="relative group"
                 >
                   {field !== 'message' ? (
@@ -277,7 +373,8 @@ export default function Contact() {
                       placeholder={field === 'name' ? 'Your Name' : 'Your Email'}
                       value={form[field as keyof typeof form] as string}
                       onChange={(e) => setForm({...form, [field]: e.target.value})}
-                      className="w-full p-3 md:p-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-yellow-400/50 focus:bg-white/10 transition-all duration-300"
+                      className="w-full p-3 md:p-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300"
+                      style={{ fontFamily: "'Inter', sans-serif" }}
                       required
                     />
                   ) : (
@@ -286,11 +383,12 @@ export default function Contact() {
                       placeholder="Your Message"
                       value={form.message}
                       onChange={(e) => setForm({...form, message: e.target.value})}
-                      className="w-full p-3 md:p-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-yellow-400/50 focus:bg-white/10 transition-all duration-300 resize-none"
+                      className="w-full p-3 md:p-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder:text-white/30 focus:outline-none focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300 resize-none"
+                      style={{ fontFamily: "'Inter', sans-serif" }}
                       required
                     />
                   )}
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-yellow-400/0 via-yellow-400/0 to-transparent group-hover:from-yellow-400/5 transition-all duration-500 pointer-events-none" />
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-amber-400/0 via-amber-400/0 to-transparent group-hover:from-amber-400/5 transition-all duration-500 pointer-events-none" />
                 </motion.div>
               ))}
               
@@ -300,17 +398,18 @@ export default function Contact() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 animate={!isSubmitting ? {
-                  boxShadow: ["0 0 0 0 rgba(234, 179, 8, 0)", "0 0 0 5px rgba(234, 179, 8, 0.2)", "0 0 0 0 rgba(234, 179, 8, 0)"]
+                  boxShadow: ["0 0 0 0 rgba(245,158,11,0)", "0 0 0 6px rgba(245,158,11,0.2)", "0 0 0 0 rgba(245,158,11,0)"]
                 } : {}}
-                transition={{ repeat: Infinity, duration: 2 }}
-                className="relative w-full overflow-hidden bg-gradient-to-r from-yellow-400 to-yellow-500 text-black py-3 md:py-4 rounded-xl text-sm md:text-base font-bold tracking-wide hover:shadow-2xl hover:shadow-yellow-500/40 transition-all duration-300 disabled:opacity-70"
+                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                className="relative w-full overflow-hidden bg-gradient-to-r from-amber-400 to-amber-500 text-black py-3 md:py-4 rounded-xl text-sm md:text-base font-bold tracking-wide hover:shadow-2xl hover:shadow-amber-500/40 transition-all duration-300 disabled:opacity-70"
+                style={{ fontFamily: "'Inter', sans-serif" }}
               >
                 <span className="relative z-10 flex items-center justify-center gap-2">
                   {isSubmitting ? (
                     <>
                       <motion.div
                         animate={{ rotate: 360 }}
-                        transition={{ repeat: Infinity, duration: 1 }}
+                        transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
                         className="w-4 h-4 border-2 border-black border-t-transparent rounded-full"
                       />
                       SENDING...
@@ -319,48 +418,60 @@ export default function Contact() {
                     <>
                       SEND MESSAGE
                       <motion.span
-                        animate={{ x: [0, 5, 0] }}
-                        transition={{ repeat: Infinity, duration: 1.5 }}
+                        animate={{ x: [0, 6, 0] }}
+                        transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
                       >
                         →
                       </motion.span>
                     </>
                   )}
                 </span>
+                
+                {/* Shine Effect */}
                 <motion.div
                   className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0"
                   initial={{ x: "-100%" }}
                   whileHover={{ x: "100%" }}
-                  transition={{ duration: 0.6 }}
+                  transition={{ duration: 0.6, ease: "easeInOut" }}
                 />
               </motion.button>
             </motion.form>
           </motion.div>
         </div>
 
-        {/* Thank You Message Popup */}
+        {/* Thank You Popup */}
         <AnimatePresence>
           {showThankYou && (
             <motion.div
               initial={{ opacity: 0, y: 50, scale: 0.9 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 50, scale: 0.9 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.3, type: "spring" }}
               className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50"
             >
-              <div className="bg-gradient-to-r from-green-500 to-green-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-2">
-                <span className="text-xl">✅</span>
-                <span className="font-medium">Thank you! We'll contact you soon.</span>
+              <div className="bg-gradient-to-r from-emerald-500 to-green-600 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-2">
+                <motion.span 
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="text-xl"
+                >
+                  ✅
+                </motion.span>
+                <span className="font-medium"
+                      style={{ fontFamily: "'Inter', sans-serif" }}>
+                  Thank you! We'll contact you soon.
+                </span>
               </div>
             </motion.div>
           )}
         </AnimatePresence>
 
+        {/* Bottom Divider */}
         <motion.div
           initial={{ opacity: 0, scaleX: 0 }}
           animate={isInView ? { opacity: 1, scaleX: 1 } : {}}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="h-px bg-gradient-to-r from-transparent via-yellow-400/30 to-transparent mt-16 md:mt-20"
+          transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
+          className="h-px bg-gradient-to-r from-transparent via-amber-400/30 to-transparent mt-16 md:mt-20"
         />
       </div>
     </section>

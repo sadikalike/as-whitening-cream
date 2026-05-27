@@ -13,13 +13,11 @@ export default function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
       
-      // Update scroll progress
       const winScroll = window.scrollY;
       const height = document.documentElement.scrollHeight - window.innerHeight;
       const progress = (winScroll / height) * 100;
       setScrollProgress(progress);
       
-      // Update active section based on scroll position
       const sections = ['home', 'about', 'cream', 'testimonials', 'contact'];
       const scrollPosition = window.scrollY + 100;
       
@@ -83,8 +81,8 @@ export default function Navbar() {
     <>
       <nav className={`fixed top-0 w-full z-50 transition-all duration-700 ${
         scrolled 
-          ? 'bg-black/90 backdrop-blur-2xl border-b border-yellow-400/20 shadow-2xl shadow-black/50' 
-          : 'bg-gradient-to-b from-black/60 via-black/30 to-transparent backdrop-blur-sm'
+          ? 'bg-black/80 backdrop-blur-2xl border-b border-amber-400/20 shadow-2xl shadow-black/30' 
+          : 'bg-gradient-to-b from-black/50 via-black/20 to-transparent backdrop-blur-sm'
       }`}>
         
         {/* Animated gradient background on scroll */}
@@ -93,13 +91,13 @@ export default function Navbar() {
           animate={{ opacity: scrolled ? 1 : 0 }}
           transition={{ duration: 0.5 }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/5 via-transparent to-yellow-400/5" />
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-400/5 via-transparent to-amber-400/5" />
         </motion.div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             
-            {/* Logo - Much Larger Size */}
+            {/* Logo - Playfair Display */}
             <motion.button 
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -121,18 +119,15 @@ export default function Navbar() {
                 
                 {/* Premium underline animation */}
                 <motion.div 
-                  className="absolute -bottom-1 left-0 h-px bg-gradient-to-r from-yellow-400 via-yellow-500 to-transparent"
+                  className="absolute -bottom-1 left-0 h-px bg-gradient-to-r from-amber-400 via-amber-500 to-transparent"
                   initial={{ width: "0%" }}
                   whileHover={{ width: "100%" }}
                   transition={{ duration: 0.4 }}
                 />
-                
-                {/* Glow effect */}
-                <div className="absolute -inset-4 bg-yellow-400/0 blur-xl group-hover:bg-yellow-400/5 transition-all duration-500 rounded-full -z-10" />
               </div>
             </motion.button>
 
-            {/* Desktop Navigation */}
+            {/* Desktop Navigation - Playfair Display */}
             <div className="hidden md:flex items-center gap-1">
               {navItems.map((item, i) => (
                 <motion.button
@@ -143,17 +138,18 @@ export default function Navbar() {
                   onClick={() => scrollToSection(item.id)}
                   onMouseEnter={() => setHoveredItem(item.id)}
                   onMouseLeave={() => setHoveredItem(null)}
-                  className={`relative px-6 py-2.5 text-sm font-medium tracking-wide transition-all duration-300 rounded-full ${
+                  className={`relative px-6 py-2.5 text-sm font-semibold tracking-wide transition-all duration-300 rounded-full ${
                     activeSection === item.id
-                      ? 'text-yellow-400'
+                      ? 'text-amber-400'
                       : 'text-white/70 hover:text-white'
                   }`}
+                  style={{ fontFamily: "'Playfair Display', serif" }}
                 >
                   {/* Premium background effect */}
                   <motion.div 
                     className={`absolute inset-0 rounded-full transition-all duration-300 ${
                       activeSection === item.id 
-                        ? 'bg-yellow-400/10' 
+                        ? 'bg-amber-400/10' 
                         : hoveredItem === item.id 
                           ? 'bg-white/5' 
                           : ''
@@ -166,18 +162,18 @@ export default function Navbar() {
                     {item.label}
                   </span>
                   
-                  {/* Active indicator - Premium dot */}
+                  {/* Active indicator - Premium diamond */}
                   {activeSection === item.id && (
                     <motion.div
                       layoutId="activeNav"
-                      className="absolute -bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-yellow-400 shadow-lg shadow-yellow-400/50"
+                      className="absolute -bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rotate-45 bg-amber-400 shadow-lg shadow-amber-400/50"
                       transition={{ duration: 0.3, type: "spring", stiffness: 500 }}
                     />
                   )}
                   
                   {/* Hover line effect */}
                   <motion.div 
-                    className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-yellow-400/0 via-yellow-400 to-yellow-400/0"
+                    className="absolute bottom-0 left-1/2 -translate-x-1/2 h-0.5 bg-gradient-to-r from-amber-400/0 via-amber-400 to-amber-400/0"
                     initial={{ width: "0%" }}
                     animate={{ width: hoveredItem === item.id ? "60%" : "0%" }}
                     transition={{ duration: 0.3 }}
@@ -186,7 +182,7 @@ export default function Navbar() {
               ))}
             </div>
 
-            {/* Premium Shop Button - Desktop */}
+            {/* Premium Shop Button - Inter Font */}
             <motion.button
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -194,7 +190,8 @@ export default function Navbar() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => scrollToSection('cream')}
-              className="hidden md:flex items-center gap-2 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 text-black px-8 py-2.5 rounded-full text-sm font-bold tracking-wide hover:shadow-2xl hover:shadow-yellow-500/50 transition-all duration-300 relative overflow-hidden group"
+              className="hidden md:flex items-center gap-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 text-black px-8 py-2.5 rounded-full text-sm font-bold tracking-wide hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 relative overflow-hidden group"
+              style={{ fontFamily: "'Inter', sans-serif" }}
             >
               {/* Shine effect */}
               <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
@@ -220,15 +217,15 @@ export default function Navbar() {
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-5">
                 <motion.span 
                   animate={{ rotate: isOpen ? 45 : 0, y: isOpen ? 6 : 0 }}
-                  className={`block h-0.5 bg-gradient-to-r from-yellow-400 to-white transition-all duration-300`}
+                  className="block h-0.5 bg-gradient-to-r from-amber-400 to-white transition-all duration-300"
                 />
                 <motion.span 
                   animate={{ opacity: isOpen ? 0 : 1 }}
-                  className={`block h-0.5 bg-gradient-to-r from-yellow-400 to-white transition-all duration-300 my-1.5`}
+                  className="block h-0.5 bg-gradient-to-r from-amber-400 to-white transition-all duration-300 my-1.5"
                 />
                 <motion.span 
                   animate={{ rotate: isOpen ? -45 : 0, y: isOpen ? -6 : 0 }}
-                  className={`block h-0.5 bg-gradient-to-r from-yellow-400 to-white transition-all duration-300`}
+                  className="block h-0.5 bg-gradient-to-r from-amber-400 to-white transition-all duration-300"
                 />
               </div>
             </motion.button>
@@ -237,7 +234,7 @@ export default function Navbar() {
 
         {/* Premium Progress Bar */}
         <motion.div 
-          className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400"
+          className="absolute bottom-0 left-0 h-[2px] bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400"
           style={{ width: `${scrollProgress}%` }}
           initial={false}
           animate={{ width: `${scrollProgress}%` }}
@@ -246,12 +243,12 @@ export default function Navbar() {
         
         {/* Progress bar glow effect */}
         <div 
-          className="absolute bottom-0 left-0 h-[2px] bg-yellow-400/30 blur-sm"
+          className="absolute bottom-0 left-0 h-[2px] bg-amber-400/30 blur-sm"
           style={{ width: `${scrollProgress}%` }}
         />
       </nav>
 
-      {/* Premium Mobile Menu Overlay */}
+      {/* Premium Mobile Menu Overlay - Playfair Display for links, Inter for button */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -284,15 +281,16 @@ export default function Navbar() {
                       onClick={() => scrollToSection(item.id)}
                       className={`block w-full text-left px-6 py-4 rounded-xl transition-all duration-300 ${
                         activeSection === item.id
-                          ? 'bg-gradient-to-r from-yellow-400/20 to-yellow-500/10 text-yellow-400 border border-yellow-400/30 shadow-lg shadow-yellow-400/20'
+                          ? 'bg-gradient-to-r from-amber-400/20 to-amber-500/10 text-amber-400 border border-amber-400/30 shadow-lg shadow-amber-400/20'
                           : 'text-white/80 hover:bg-white/10 hover:text-white hover:translate-x-2'
                       }`}
+                      style={{ fontFamily: "'Playfair Display', serif", fontWeight: 600 }}
                     >
                       <div className="flex items-center justify-between">
-                        <span className="text-base font-medium tracking-wide">{item.label}</span>
+                        <span className="text-base tracking-wide">{item.label}</span>
                         {activeSection === item.id && (
                           <motion.div 
-                            className="w-1.5 h-1.5 rounded-full bg-yellow-400"
+                            className="w-1.5 h-1.5 rotate-45 bg-amber-400"
                             animate={{ scale: [1, 1.5, 1] }}
                             transition={{ repeat: Infinity, duration: 1.5 }}
                           />
@@ -301,7 +299,7 @@ export default function Navbar() {
                     </motion.button>
                   ))}
                   
-                  {/* Premium Mobile Shop Button */}
+                  {/* Premium Mobile Shop Button - Inter Font */}
                   <motion.button
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -309,7 +307,8 @@ export default function Navbar() {
                     transition={{ delay: 0.2, type: "spring" }}
                     whileHover={{ scale: 1.02 }}
                     onClick={() => scrollToSection('cream')}
-                    className="w-full mt-4 bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-6 py-4 rounded-xl text-base font-bold tracking-wide hover:shadow-2xl hover:shadow-yellow-500/50 transition-all duration-300 relative overflow-hidden group"
+                    className="w-full mt-4 bg-gradient-to-r from-amber-400 to-amber-500 text-black px-6 py-4 rounded-xl text-base font-bold tracking-wide hover:shadow-2xl hover:shadow-amber-500/50 transition-all duration-300 relative overflow-hidden group"
+                    style={{ fontFamily: "'Inter', sans-serif" }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/30 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
                     <span className="relative z-10">SHOP NOW →</span>
@@ -324,9 +323,9 @@ export default function Navbar() {
       {/* Subtle floating particles effect when scrolled */}
       {scrolled && (
         <div className="fixed top-20 left-0 right-0 pointer-events-none z-40">
-          <div className="absolute top-0 left-1/4 w-1 h-1 bg-yellow-400/30 rounded-full animate-ping" />
-          <div className="absolute top-2 right-1/3 w-0.5 h-0.5 bg-yellow-400/20 rounded-full animate-pulse" />
-          <div className="absolute top-4 left-1/3 w-0.5 h-0.5 bg-yellow-400/25 rounded-full animate-pulse delay-500" />
+          <div className="absolute top-0 left-1/4 w-1 h-1 bg-amber-400/30 rounded-full animate-ping" />
+          <div className="absolute top-2 right-1/3 w-0.5 h-0.5 bg-amber-400/20 rounded-full animate-pulse" />
+          <div className="absolute top-4 left-1/3 w-0.5 h-0.5 bg-amber-400/25 rounded-full animate-pulse delay-500" />
         </div>
       )}
     </>

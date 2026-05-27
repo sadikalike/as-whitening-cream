@@ -9,7 +9,6 @@ export default function Hero() {
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    // Set window size after mount
     setWindowSize({
       width: window.innerWidth,
       height: window.innerHeight,
@@ -35,12 +34,10 @@ export default function Hero() {
     };
   }, []);
 
-  // Don't render particles on server
   const [particles, setParticles] = useState<Array<{ x: number; y: number }>>([]);
 
   useEffect(() => {
-    // Generate random particles only on client side
-    const newParticles = Array.from({ length: 6 }, () => ({
+    const newParticles = Array.from({ length: 8 }, () => ({
       x: Math.random() * window.innerWidth,
       y: Math.random() * window.innerHeight,
     }));
@@ -53,11 +50,10 @@ export default function Hero() {
         
         {/* Video Background */}
         <div className="absolute inset-0 z-0">
-          
           {error && (
             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
               <div className="text-white/50 text-center p-4">
-                <p className="text-yellow-400 text-sm">⚠️ Video not found</p>
+                <p className="text-amber-400 text-sm">⚠️ Video not found</p>
                 <p className="text-xs mt-2">Path: /public/images/video.mp4</p>
               </div>
             </div>
@@ -70,114 +66,120 @@ export default function Hero() {
             muted
             playsInline
             className="w-full h-full object-cover"
-            style={{ 
-              objectPosition: "center center",
-            }}
+            style={{ objectPosition: "center center" }}
             onError={() => setError(true)}
           >
             <source src="/images/video.mp4" type="video/mp4" />
           </video>
           
-          <div className="absolute inset-0 bg-black/30" />
+          <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50 z-0" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/60 z-0" />
 
         {/* TOP: Badge + Heading + Subtext */}
         <div
-          className="absolute left-0 right-0 z-10 flex flex-col items-center text-center px-4 gap-1.5"
+          className="absolute left-0 right-0 z-10 flex flex-col items-center text-center px-4 gap-2"
           style={{ top: "88px" }}
         >
-          {/* Badge with animation */}
+          {/* Badge - Inter Font */}
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm rounded-full px-3 py-1"
+            className="inline-flex items-center gap-1.5 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 border border-white/10"
           >
-            <span className="w-1 h-1 rounded-full bg-yellow-400 animate-pulse" />
-            <span className="text-yellow-400/90 text-[9px] tracking-[0.25em] uppercase font-light">
+            <span className="w-1 h-1 rounded-full bg-amber-400 animate-pulse" />
+            <span className="text-amber-400/90 text-[10px] tracking-[0.3em] uppercase font-semibold"
+                  style={{ fontFamily: "'Inter', sans-serif" }}>
               LUXURY SKINCARE
             </span>
           </motion.div>
 
-          {/* Heading with space between words */}
+          {/* Main Heading - Premium Sans Serif (Space Grotesk / Clash Display style) */}
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="text-6xl sm:text-8xl font-light text-white leading-[1.05] tracking-tighter drop-shadow-2xl"
+            className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white leading-[1.1] tracking-tighter drop-shadow-2xl"
+            style={{ fontFamily: "'Space Grotesk', 'Clash Display', 'Inter', sans-serif" }}
           >
             Whitening{" "}
-            <span className="font-bold bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-400 bg-clip-text text-transparent">
               Perfection
             </span>
           </motion.h1>
 
+          {/* Decorative line */}
           <motion.div 
             initial={{ width: 0 }}
-            animate={{ width: "40px" }}
+            animate={{ width: "60px" }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="h-px bg-gradient-to-r from-yellow-400 to-transparent"
+            className="h-px bg-gradient-to-r from-amber-400 via-amber-300 to-transparent"
           />
 
-          {/* Subtext with animation */}
+          {/* Subtext - Inter Light */}
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="text-white/70 text-[11px] max-w-[200px] leading-snug font-light"
+            className="text-white/80 text-xs sm:text-sm max-w-[280px] sm:max-w-md leading-relaxed font-medium tracking-wide"
+            style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400 }}
           >
             Advanced formula for radiant, even-toned skin.{" "}
-            <span className="text-yellow-400/90">Visible results in just 7 days.</span>
+            <span className="text-amber-400 font-semibold">Visible results in just 7 days.</span>
           </motion.p>
         </div>
 
         {/* BOTTOM: Buttons + Scroll */}
         <div
-          className="absolute left-0 right-0 z-10 flex flex-col items-center gap-2 px-4"
-          style={{ bottom: "1px" }}
+          className="absolute left-0 right-0 z-10 flex flex-col items-center gap-3 px-4"
+          style={{ bottom: "20px" }}
         >
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-2 w-full max-w-[200px] sm:max-w-sm"
+            className="flex flex-col sm:flex-row gap-3 w-full max-w-[240px] sm:max-w-sm"
           >
             <button
               onClick={() => document.getElementById("cream")?.scrollIntoView({ behavior: "smooth" })}
-              className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-black py-2 rounded-full text-[11px] font-bold tracking-wide hover:shadow-xl hover:shadow-yellow-500/30 transition-all duration-300 hover:scale-105 active:scale-95"
+              className="w-full bg-gradient-to-r from-amber-400 to-amber-500 text-black py-2.5 rounded-full text-xs font-bold tracking-wider hover:shadow-2xl hover:shadow-amber-500/40 transition-all duration-300 hover:scale-105 active:scale-95"
+              style={{ fontFamily: "'Inter', sans-serif" }}
             >
               SHOP NOW →
             </button>
             <button
               onClick={() => document.getElementById("about")?.scrollIntoView({ behavior: "smooth" })}
-              className="w-full border border-white/40 text-white py-2 rounded-full text-[11px] font-bold tracking-wide hover:border-yellow-400 hover:text-yellow-400 transition-all duration-300 hover:scale-105 active:scale-95"
+              className="w-full border border-white/40 text-white py-2.5 rounded-full text-xs font-bold tracking-wider hover:border-amber-400 hover:text-amber-400 transition-all duration-300 hover:scale-105 active:scale-95 backdrop-blur-sm"
+              style={{ fontFamily: "'Inter', sans-serif" }}
             >
               LEARN MORE
             </button>
           </motion.div>
 
+          {/* Scroll indicator */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="flex flex-col items-center gap-0.5"
+            className="flex flex-col items-center gap-1"
           >
-            <span className="text-white/40 text-[8px] tracking-[0.2em] uppercase font-light">SCROLL</span>
-            <div className="w-3.5 h-5 border border-white/30 rounded-full flex justify-center">
+            <span className="text-white/40 text-[8px] tracking-[0.3em] uppercase font-medium"
+                  style={{ fontFamily: "'Inter', sans-serif" }}>SCROLL</span>
+            <div className="w-4 h-6 border border-white/30 rounded-full flex justify-center">
               <motion.div 
-                animate={{ y: [0, 8, 0] }}
+                animate={{ y: [0, 10, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5 }}
-                className="w-0.5 h-1.5 bg-yellow-400 rounded-full mt-1"
+                className="w-0.5 h-2 bg-amber-400 rounded-full mt-1"
               />
             </div>
           </motion.div>
         </div>
 
-        {/* Floating particles animation - Fixed for SSR */}
+        {/* Floating particles */}
         {windowSize.width > 0 && particles.length > 0 && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
             {particles.map((particle, i) => (
               <motion.div
                 key={i}
@@ -187,20 +189,30 @@ export default function Hero() {
                   opacity: 0
                 }}
                 animate={{ 
-                  y: [particle.y, particle.y - 100, particle.y - 200],
-                  opacity: [0, 0.5, 0],
-                  x: particle.x + (Math.random() * 100 - 50)
+                  y: [particle.y, particle.y - 150, particle.y - 300],
+                  opacity: [0, 0.4, 0],
+                  x: particle.x + (Math.random() * 120 - 60)
                 }}
                 transition={{ 
-                  duration: 3 + Math.random() * 2,
+                  duration: 4 + Math.random() * 3,
                   repeat: Infinity,
                   delay: Math.random() * 5
                 }}
-                className="absolute w-0.5 h-0.5 rounded-full bg-yellow-400/30"
+                className="absolute w-1 h-1 rounded-full bg-amber-400/40 blur-[0.5px]"
               />
             ))}
           </div>
         )}
+
+        {/* Premium corner accents */}
+        <div className="absolute bottom-6 left-6 z-10 opacity-30">
+          <div className="w-8 h-px bg-gradient-to-r from-amber-400 to-transparent" />
+          <div className="w-px h-8 bg-gradient-to-b from-amber-400 to-transparent mt-1" />
+        </div>
+        <div className="absolute top-24 right-6 z-10 opacity-30">
+          <div className="w-8 h-px bg-gradient-to-l from-amber-400 to-transparent" />
+          <div className="w-px h-8 bg-gradient-to-t from-amber-400 to-transparent mt-1" />
+        </div>
 
       </div>
     </section>
