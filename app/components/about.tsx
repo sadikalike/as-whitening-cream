@@ -17,7 +17,7 @@ export default function About() {
   }, []);
 
   const stats = [
-    { value: "50K+", label: "Happy Customers", gold: false, icon: "👥" },
+    { value: "5K+", label: "Happy Customers", gold: false, icon: "👥" },
     { value: "7 Days", label: "Visible Results", gold: true, icon: "⚡" },
     { value: "100%", label: "Natural Formula", gold: false, icon: "🌿" },
     { value: "24/7", label: "Expert Support", gold: false, icon: "💬" },

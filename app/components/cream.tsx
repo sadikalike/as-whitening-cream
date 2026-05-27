@@ -46,6 +46,15 @@ export default function Cream() {
     setImageErrors(prev => ({ ...prev, [id]: true }));
   };
 
+  // WhatsApp link
+  const whatsappNumber = "918310424827";
+  const whatsappMessage = "Hi, I want to buy AS Whitening Cream";
+  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+
+  const handleBuyNow = () => {
+    window.open(whatsappLink, '_blank');
+  };
+
   return (
     <section id="cream" className="relative py-20 md:py-28 px-5 md:px-12 bg-black overflow-hidden scroll-mt-20">
 
@@ -177,7 +186,7 @@ export default function Cream() {
             <div className="absolute top-0 left-0 w-32 h-32 bg-yellow-400/8 rounded-full blur-3xl" />
             <div className="absolute bottom-0 right-0 w-28 h-28 bg-yellow-400/5 rounded-full blur-2xl" />
 
-            {/* Cream Image - Using regular img tag for better compatibility */}
+            {/* Cream Image */}
             <motion.div 
               initial={{ scale: 0.8, opacity: 0 }}
               whileInView={{ scale: 1, opacity: 1 }}
@@ -216,7 +225,7 @@ export default function Cream() {
               transition={{ duration: 0.3, delay: 0.4 }}
               className="text-3xl sm:text-4xl md:text-5xl font-light text-white"
             >
-              ₹499
+              ₹999
             </motion.p>
             <p className="text-white/30 text-[10px] md:text-xs mt-2">Free shipping on orders above ₹999</p>
           </motion.div>
@@ -275,7 +284,7 @@ export default function Cream() {
               </div>
             </motion.div>
 
-            {/* CTA Button - Mobile optimized */}
+            {/* CTA Button - WhatsApp Link */}
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.96 }}
@@ -283,10 +292,12 @@ export default function Cream() {
                 boxShadow: ["0 0 0 0 rgba(234, 179, 8, 0)", "0 0 0 10px rgba(234, 179, 8, 0)", "0 0 0 0 rgba(234, 179, 8, 0)"]
               }}
               transition={{ repeat: Infinity, duration: 2, delay: 1 }}
+              onClick={handleBuyNow}
               className="w-full relative overflow-hidden bg-gradient-to-r from-yellow-400 to-yellow-500 text-black py-3 md:py-4 rounded-xl md:rounded-2xl text-xs md:text-sm font-bold tracking-wide hover:shadow-2xl hover:shadow-yellow-500/40 transition-all duration-300"
             >
               <span className="relative z-10 flex items-center justify-center gap-2">
-                BUY NOW — ₹499
+                <span className="text-base">📱</span>
+                BUY NOW — ₹999
                 <motion.span
                   animate={{ x: [0, 5, 0] }}
                   transition={{ repeat: Infinity, duration: 1.5 }}
@@ -302,6 +313,7 @@ export default function Cream() {
               />
             </motion.button>
 
+            {/* WhatsApp direct contact */}
             <motion.p 
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
@@ -309,8 +321,13 @@ export default function Cream() {
               className="text-center text-white/30 text-[10px] md:text-xs"
             >
               Bulk orders:{" "}
-              <a href="tel:+919611043858" className="text-yellow-400/60 hover:text-yellow-400 transition-colors">
-                +91-9611043858
+              <a 
+                href={whatsappLink} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-yellow-400/60 hover:text-yellow-400 transition-colors"
+              >
+                +91-8310424827
               </a>
             </motion.p>
           </motion.div>
