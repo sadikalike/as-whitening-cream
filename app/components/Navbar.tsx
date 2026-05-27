@@ -1,8 +1,6 @@
-
 'use client';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Image from 'next/image';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -22,7 +20,7 @@ export default function Navbar() {
       setScrollProgress(progress);
       
       // Update active section based on scroll position
-      const sections = ['home', 'about', 'cream', 'contact'];
+      const sections = ['home', 'about', 'cream', 'testimonials', 'contact'];
       const scrollPosition = window.scrollY + 100;
       
       for (const section of sections) {
@@ -77,6 +75,7 @@ export default function Navbar() {
     { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
     { id: 'cream', label: 'Cream' },
+    { id: 'testimonials', label: 'Reviews' },
     { id: 'contact', label: 'Contact' }
   ];
 
@@ -100,7 +99,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             
-            {/* Logo with transparent background */}
+            {/* Logo - Much Larger Size */}
             <motion.button 
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -110,16 +109,13 @@ export default function Navbar() {
               className="group relative cursor-pointer z-50"
             >
               <div className="relative">
-                <Image
+                <img
                   src="/logo.jpg"
                   alt="Logo"
-                  width={120}
-                  height={40}
-                  className="object-contain"
-                  priority
+                  className="h-20 md:h-24 w-auto object-contain"
                   style={{ 
                     backgroundColor: 'transparent',
-                    mixBlendMode: 'normal'
+                    display: 'block'
                   }}
                 />
                 
@@ -132,11 +128,11 @@ export default function Navbar() {
                 />
                 
                 {/* Glow effect */}
-                <div className="absolute -inset-2 bg-yellow-400/0 blur-xl group-hover:bg-yellow-400/5 transition-all duration-500 rounded-full -z-10" />
+                <div className="absolute -inset-4 bg-yellow-400/0 blur-xl group-hover:bg-yellow-400/5 transition-all duration-500 rounded-full -z-10" />
               </div>
             </motion.button>
 
-            {/* Desktop Navigation - Without Icons */}
+            {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-1">
               {navItems.map((item, i) => (
                 <motion.button

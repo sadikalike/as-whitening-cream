@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import About from './components/about';
 import Cream from './components/cream';
 import Contact from './components/contact';
+import Testimonials from './components/testimonials';
 
 export default function HomePage() {
   return (
@@ -13,6 +14,7 @@ export default function HomePage() {
       <Hero />
       <About />
       <Cream />
+      |<Testimonials/>
       <Contact />
       <Footer />
     </div>
