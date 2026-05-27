@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ffffff;
 }
 
 @theme inline {
@@ -12,25 +12,121 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* LIGHT MODE */
+@media (prefers-color-scheme: light) {
+  :root {
+    --background: #ffffff;
+    --foreground: #171717;
+  }
+}
+
+/* DARK MODE */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
+    --background: #000000;
     --foreground: #ededed;
   }
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
 }
 
+/* PREMIUM GRADIENT ANIMATION */
 @keyframes gradient {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
+
 .animate-gradient {
   background-size: 200% 200%;
   animation: gradient 10s ease infinite;
+}
+
+/* FLOATING EFFECT */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 5s ease-in-out infinite;
+}
+
+/* SOFT GLOW */
+.glow {
+  box-shadow:
+    0 0 20px rgba(255, 215, 0, 0.25),
+    0 0 40px rgba(255, 215, 0, 0.15);
+}
+
+/* PREMIUM TEXT SHINE */
+@keyframes shine {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.text-shine {
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #ffe082 20%,
+    #ffffff 40%,
+    #ffffff 100%
+  );
+
+  background-size: 200% auto;
+
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+
+  animation: shine 5s linear infinite;
+}
+
+/* REMOVE BLUE TAP ON MOBILE */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* SMOOTH VIDEO RENDER */
+video {
+  image-rendering: auto;
+  object-fit: cover;
+}
+
+/* HIDE SCROLLBAR */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
 }

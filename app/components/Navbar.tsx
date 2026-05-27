@@ -1,6 +1,8 @@
+
 'use client';
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -98,7 +100,7 @@ export default function Navbar() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             
-            {/* Premium Logo */}
+            {/* Logo with transparent background */}
             <motion.button 
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -108,12 +110,18 @@ export default function Navbar() {
               className="group relative cursor-pointer z-50"
             >
               <div className="relative">
-                <span className="text-white text-xl md:text-2xl font-light tracking-[0.3em]">
-                  <span className="font-bold bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-400 bg-clip-text text-transparent">
-                    AS
-                  </span>
-                  <span className="text-white/70"> WHITENING</span>
-                </span>
+                <Image
+                  src="/logo.jpg"
+                  alt="Logo"
+                  width={120}
+                  height={40}
+                  className="object-contain"
+                  priority
+                  style={{ 
+                    backgroundColor: 'transparent',
+                    mixBlendMode: 'normal'
+                  }}
+                />
                 
                 {/* Premium underline animation */}
                 <motion.div 
