@@ -1,9 +1,10 @@
 'use client';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 
 export default function Cream() {
-  const [imageErrors, setImageErrors] = useState({});
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -12,19 +13,19 @@ export default function Cream() {
 
   const benefits = [
     { 
-      id: 'dark',
+      id: 'dark' as const,
       image: "/dark.jpg",
       title: "Dark Spot Reduction", 
       desc: "Targets hyperpigmentation for even tone" 
     },
     { 
-      id: 'pimple',
+      id: 'pimple' as const,
       image: "/pimple.jpg",
       title: "Pimple Control", 
       desc: "Prevents breakouts and reduces acne" 
     },
     { 
-      id: 'pore',
+      id: 'pore' as const,
       image: "/pore.jpg",
       title: "Pore Minimizing", 
       desc: "Refines skin texture and minimizes pores" 
@@ -38,8 +39,8 @@ export default function Cream() {
     { step: "04", text: "Use morning & night daily" },
   ];
 
-  const handleImageError = (id) => {
-    setImageErrors(prev => ({ ...prev, [id]: true }));
+  const handleImageError = (id: string) => {
+    setImageErrors((prev) => ({ ...prev, [id]: true }));
   };
 
   const whatsappNumber = "918310424827";
@@ -50,26 +51,10 @@ export default function Cream() {
     window.open(whatsappLink, '_blank');
   };
 
-  // Fast animation variants
-  const fadeUpFast = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.3, ease: "easeOut" } }
-  };
-
-  const fadeLeftFast = {
-    hidden: { opacity: 0, x: -20 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } }
-  };
-
-  const fadeRightFast = {
-    hidden: { opacity: 0, x: 20 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.3, ease: "easeOut" } }
-  };
-
   return (
     <section id="cream" className="relative py-20 md:py-28 px-5 md:px-12 bg-black overflow-hidden scroll-mt-20">
       
-      {/* Static Background - No animations */}
+      {/* Static Background */}
       <div className="absolute inset-0 bg-gradient-to-br from-black via-black to-amber-950/20" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-amber-400/5 blur-3xl" />
       <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-amber-400/3 blur-3xl" />
@@ -78,7 +63,7 @@ export default function Cream() {
       {/* Static Grid Pattern */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(245,158,11,0.015)_1px,transparent_1px),linear-gradient(90deg,rgba(245,158,11,0.015)_1px,transparent_1px)] bg-[size:60px_60px]" />
       
-      {/* Static Particles - No animation loop */}
+      {/* Static Particles */}
       {mounted && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           {[...Array(8)].map((_, i) => (
@@ -103,12 +88,12 @@ export default function Cream() {
 
       <div className="relative z-10 max-w-6xl mx-auto">
 
-        {/* Header Section - Fast animations */}
+        {/* Header Section */}
         <div className="text-center mb-12 md:mb-16">
           <motion.div
-            variants={fadeUpFast}
-            initial="hidden"
-            whileInView="visible"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
             viewport={{ once: true }}
             className="inline-flex items-center gap-2 md:gap-3 mb-5 md:mb-6"
           >
@@ -120,10 +105,9 @@ export default function Cream() {
           </motion.div>
           
           <motion.h2 
-            variants={fadeUpFast}
-            initial="hidden"
-            whileInView="visible"
-            transition={{ delay: 0.05 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.05 }}
             viewport={{ once: true }}
             className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-white leading-[1.2] tracking-tighter px-2"
           >
@@ -142,10 +126,9 @@ export default function Cream() {
           />
           
           <motion.p 
-            variants={fadeUpFast}
-            initial="hidden"
-            whileInView="visible"
-            transition={{ delay: 0.1 }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
             viewport={{ once: true }}
             className="text-white/50 text-sm md:text-base max-w-xs md:max-w-xl mx-auto leading-relaxed px-3"
           >
@@ -158,10 +141,9 @@ export default function Cream() {
           {benefits.map((item, i) => (
             <motion.div
               key={item.id}
-              variants={fadeUpFast}
-              initial="hidden"
-              whileInView="visible"
-              transition={{ delay: i * 0.05 }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: i * 0.05 }}
               viewport={{ once: true }}
               whileHover={{ y: -5 }}
               className="relative overflow-hidden bg-white/[0.03] border border-white/10 rounded-2xl p-5 md:p-6 text-center hover:border-amber-400/40 transition-all duration-200 cursor-pointer"
@@ -171,13 +153,16 @@ export default function Cream() {
               <div className="relative w-full h-36 sm:h-40 md:h-48 mx-auto mb-4 md:mb-5 overflow-hidden rounded-xl">
                 <div className="w-full h-full transition-transform duration-300 hover:scale-105">
                   {!imageErrors[item.id] ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover"
-                      onError={() => handleImageError(item.id)}
-                    />
+                    <div className="relative w-full h-full">
+                      <Image
+                        src={item.image}
+                        alt={item.title}
+                        fill
+                        className="object-cover"
+                        onError={() => handleImageError(item.id)}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      />
+                    </div>
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-4xl md:text-5xl bg-gradient-to-br from-amber-400/20 to-transparent">
                       {item.id === 'dark' && '🎯'}
@@ -203,9 +188,9 @@ export default function Cream() {
 
           {/* Left: Product Card */}
           <motion.div
-            variants={fadeLeftFast}
-            initial="hidden"
-            whileInView="visible"
+            initial={{ opacity: 0, x: -30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
             viewport={{ once: true }}
             className="relative overflow-hidden bg-gradient-to-br from-amber-400/10 to-white/[0.02] border border-amber-400/20 rounded-2xl md:rounded-3xl p-6 md:p-8 flex flex-col items-center justify-center text-center"
           >
@@ -213,16 +198,19 @@ export default function Cream() {
             <div className="absolute -bottom-20 -right-20 w-40 h-40 bg-amber-400/5 rounded-full blur-3xl" />
 
             <div className="relative w-full max-w-[200px] sm:max-w-[240px] md:max-w-[280px] mx-auto mb-4 md:mb-6">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/cream.jpg"
-                alt="AS Whitening Cream"
-                className="w-full h-auto object-contain drop-shadow-2xl"
-                style={{ maxHeight: '280px' }}
-                onError={(e) => {
-                  e.currentTarget.src = '/fallback.jpg';
-                }}
-              />
+              <div className="relative w-full" style={{ aspectRatio: '1/1' }}>
+                <Image
+                  src="/cream.jpg"
+                  alt="AS Whitening Cream"
+                  fill
+                  className="object-contain drop-shadow-2xl"
+                  sizes="(max-width: 768px) 200px, 280px"
+                  onError={(e) => {
+                    const target = e.currentTarget as HTMLImageElement;
+                    target.src = '/fallback.jpg';
+                  }}
+                />
+              </div>
             </div>
 
             <div className="inline-flex items-center gap-2 bg-amber-400/10 border border-amber-400/20 rounded-full px-3 py-1.5 mb-3 md:mb-4">
@@ -245,9 +233,9 @@ export default function Cream() {
 
           {/* Right: Info + CTA */}
           <motion.div
-            variants={fadeRightFast}
-            initial="hidden"
-            whileInView="visible"
+            initial={{ opacity: 0, x: 30 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.3 }}
             viewport={{ once: true }}
             className="flex flex-col gap-3 md:gap-4"
           >
