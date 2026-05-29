@@ -7,81 +7,120 @@ export default function Hero() {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [error, setError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
+  const [videoSrc, setVideoSrc] = useState("");
 
   useEffect(() => {
-    setWindowSize({
-      width: window.innerWidth,
-      height: window.innerHeight,
-    });
-
-    // Detect mobile device
+    // Better mobile detection
     const checkMobile = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
+      const userAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const screenWidth = window.innerWidth < 768;
+      const isMobileDevice = userAgent || screenWidth;
+      
+      setIsMobile(isMobileDevice);
+      
+      // Set video source based on device
+      if (isMobileDevice) {
+        setVideoSrc("/images/videombl.mp4");
+      } else {
+        setVideoSrc("/images/video.mp4");
+      }
     };
     
     checkMobile();
-    window.addEventListener('resize', checkMobile);
     
-    return () => window.removeEventListener('resize', checkMobile);
+    // Handle resize
+    const handleResize = () => {
+      const userAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      const screenWidth = window.innerWidth < 768;
+      const isMobileDevice = userAgent || screenWidth;
+      setIsMobile(isMobileDevice);
+      
+      if (isMobileDevice) {
+        setVideoSrc("/images/videombl.mp4");
+      } else {
+        setVideoSrc("/images/video.mp4");
+      }
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || !videoSrc) return;
 
+    // Mobile autoplay fix
     const playVideo = () => {
-      video.play().catch(err => {
-        console.error("Video play failed:", err);
-        setError(true);
-      });
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(err => {
+          console.error("Video play failed:", err);
+          setError(true);
+        });
+      }
     };
 
+    // Load and play
+    video.load();
+    
+    // Add event listeners
     video.addEventListener('canplaythrough', playVideo);
     video.addEventListener('loadeddata', playVideo);
-    playVideo();
+    
+    // Small delay for mobile
+    setTimeout(playVideo, 100);
+    
+    // User interaction fallback for mobile
+    const handleUserInteraction = () => {
+      playVideo();
+      document.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener('click', handleUserInteraction);
+    };
+    
+    if (isMobile) {
+      document.addEventListener('touchstart', handleUserInteraction);
+      document.addEventListener('click', handleUserInteraction);
+    }
 
     return () => {
       video.removeEventListener('canplaythrough', playVideo);
       video.removeEventListener('loadeddata', playVideo);
+      document.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener('click', handleUserInteraction);
     };
-  }, [isMobile]);
+  }, [videoSrc, isMobile]);
 
   return (
     <section id="home" className="relative h-[100vh] w-full">
       <div className="sticky top-0 h-screen w-full overflow-hidden bg-black">
         
-        {/* Video Background - Auto select based on device */}
+        {/* Video Background */}
         <div className="absolute inset-0 z-0">
-          {!error ? (
+          {!error && videoSrc ? (
             <video
               ref={videoRef}
               autoPlay
               loop
               muted
               playsInline
+              disablePictureInPicture
               className="w-full h-full object-cover"
               style={{ objectPosition: "center center" }}
               onError={() => setError(true)}
-              key={isMobile ? "mobile" : "desktop"}
             >
-              {/* Mobile video - high quality compressed */}
-              <source 
-                src={isMobile ? "/images/videombl.mp4" : "/images/video.mp4"} 
-                type="video/mp4" 
-              />
+              <source src={videoSrc} type="video/mp4" />
             </video>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
               <div className="text-white/50 text-center p-4">
-                <p className="text-amber-400 text-sm">✨ Premium Skincare</p>
-                <p className="text-xs mt-2">AS Whitening Cream</p>
+                <p className="text-amber-400 text-sm">✨ AS Whitening Cream</p>
+                <p className="text-xs mt-2">Premium Skincare</p>
               </div>
             </div>
           )}
           
-          {/* Overlay gradient */}
+          {/* Overlay gradients */}
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
@@ -92,7 +131,6 @@ export default function Hero() {
           className="absolute left-0 right-0 z-10 flex flex-col items-center text-center px-4 gap-2"
           style={{ top: "88px" }}
         >
-          {/* Badge */}
           <motion.div 
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -105,7 +143,6 @@ export default function Hero() {
             </span>
           </motion.div>
 
-          {/* Main Heading */}
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -118,7 +155,6 @@ export default function Hero() {
             </span>
           </motion.h1>
 
-          {/* Decorative line */}
           <motion.div 
             initial={{ width: 0 }}
             animate={{ width: "60px" }}
@@ -126,7 +162,6 @@ export default function Hero() {
             className="h-px bg-gradient-to-r from-amber-400 via-amber-300 to-transparent"
           />
 
-          {/* Subtext */}
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -163,7 +198,6 @@ export default function Hero() {
             </button>
           </motion.div>
 
-          {/* Scroll indicator */}
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -181,7 +215,7 @@ export default function Hero() {
           </motion.div>
         </div>
 
-        {/* Premium corner accents */}
+        {/* Corner accents */}
         <div className="absolute bottom-6 left-6 z-10 opacity-30">
           <div className="w-8 h-px bg-gradient-to-r from-amber-400 to-transparent" />
           <div className="w-px h-8 bg-gradient-to-b from-amber-400 to-transparent mt-1" />
