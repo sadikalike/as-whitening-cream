@@ -8,6 +8,7 @@ export default function Hero() {
   const [error, setError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [videoSrc, setVideoSrc] = useState("");
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
   useEffect(() => {
     // Better mobile detection
@@ -28,7 +29,6 @@ export default function Hero() {
     
     checkMobile();
     
-    // Handle resize
     const handleResize = () => {
       const userAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       const screenWidth = window.innerWidth < 768;
@@ -50,30 +50,34 @@ export default function Hero() {
     const video = videoRef.current;
     if (!video || !videoSrc) return;
 
-    // Mobile autoplay fix
-    const playVideo = () => {
+    setIsVideoReady(false);
+
+    // Preload video metadata for faster start
+    video.preload = "auto";
+    
+    const handleCanPlay = () => {
+      setIsVideoReady(true);
       const playPromise = video.play();
       if (playPromise !== undefined) {
         playPromise.catch(err => {
           console.error("Video play failed:", err);
-          setError(true);
         });
       }
     };
 
-    // Load and play
+    const handleLoadedData = () => {
+      setIsVideoReady(true);
+    };
+
+    video.addEventListener('canplay', handleCanPlay);
+    video.addEventListener('loadeddata', handleLoadedData);
     video.load();
-    
-    // Add event listeners
-    video.addEventListener('canplaythrough', playVideo);
-    video.addEventListener('loadeddata', playVideo);
-    
-    // Small delay for mobile
-    setTimeout(playVideo, 100);
-    
+
     // User interaction fallback for mobile
     const handleUserInteraction = () => {
-      playVideo();
+      if (video && video.paused) {
+        video.play().catch(err => console.log("Play failed:", err));
+      }
       document.removeEventListener('touchstart', handleUserInteraction);
       document.removeEventListener('click', handleUserInteraction);
     };
@@ -84,8 +88,8 @@ export default function Hero() {
     }
 
     return () => {
-      video.removeEventListener('canplaythrough', playVideo);
-      video.removeEventListener('loadeddata', playVideo);
+      video.removeEventListener('canplay', handleCanPlay);
+      video.removeEventListener('loadeddata', handleLoadedData);
       document.removeEventListener('touchstart', handleUserInteraction);
       document.removeEventListener('click', handleUserInteraction);
     };
@@ -98,19 +102,31 @@ export default function Hero() {
         {/* Video Background */}
         <div className="absolute inset-0 z-0">
           {!error && videoSrc ? (
-            <video
-              ref={videoRef}
-              autoPlay
-              loop
-              muted
-              playsInline
-              disablePictureInPicture
-              className="w-full h-full object-cover"
-              style={{ objectPosition: "center center" }}
-              onError={() => setError(true)}
-            >
-              <source src={videoSrc} type="video/mp4" />
-            </video>
+            <>
+              {/* Fallback gradient while video loads */}
+              {!isVideoReady && (
+                <div className="absolute inset-0 bg-gradient-to-br from-amber-900/20 to-black flex items-center justify-center z-10">
+                  <div className="w-8 h-8 border-2 border-amber-400/30 border-t-amber-400 rounded-full animate-spin" />
+                </div>
+              )}
+              
+              <video
+                ref={videoRef}
+                autoPlay
+                loop
+                muted
+                playsInline
+                disablePictureInPicture
+                className="w-full h-full object-cover transition-opacity duration-500"
+                style={{ 
+                  objectPosition: "center center",
+                  opacity: isVideoReady ? 1 : 0
+                }}
+                onError={() => setError(true)}
+              >
+                <source src={videoSrc} type="video/mp4" />
+              </video>
+            </>
           ) : (
             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-900 to-black">
               <div className="text-white/50 text-center p-4">
